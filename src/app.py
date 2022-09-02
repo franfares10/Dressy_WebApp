@@ -1,9 +1,5 @@
 from flask import Flask,render_template,Response
 import cv2
-import os
-from sys import maxsize
-#from keras.models import load_model
-from time import sleep, time
 import numpy as np
 import tensorflow as tf
 
