@@ -1,17 +1,25 @@
 from flask import Flask,render_template,Response
 import cv2
+import os
+from sys import maxsize
+#from keras.models import load_model
+from time import sleep, time
 import numpy as np
 import tensorflow as tf
+import requests
+import json
 
 app=Flask(__name__)
 
 face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\src\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\src\\model\\model.h5') #El que entrenamos nosotros en jupyter
-
+classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\src\\model\\model_v2.h5') #El que entrenamos nosotros en jupyter
+HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
 emotion_labels = ['Angry', 'Disgust', 'Fear','Happy', 'Neutral', 'Sad', 'Surprise']
+
 cap=cv2.VideoCapture(0)
 
 def modelPrediction():
+    currentEmotion = ""
     while True:
         _, frame = cap.read()
         labels = []
@@ -31,16 +39,35 @@ def modelPrediction():
                 roi = np.expand_dims(roi, axis=0)
                 
                 prediction = classifier.predict(roi)
-                for pred in prediction:
-                    print(pred)
+
                 label = emotion_labels[prediction.argmax()]
-                print(emotion_labels[np.argmax(prediction[0])])
+                #print(emotion_labels[np.argmax(prediction[0])])
 
                 probabilidadPreddicion = str(prediction[0][np.argmax(prediction[0])])
 
                 label_position = (x, y)
                 cv2.putText(frame, label+probabilidadPreddicion, label_position,
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                if( currentEmotion!="" and label!=currentEmotion and label!="neutral"):
+                    #aca escribo en el archivo
+                    print("CAMBIE DE EMOCION")
+                    payload = json.dumps({
+                        "prenda": "630f55248ac2207315ff8b0f",
+                        "emocion": "630ea9efb0c20d906714b1c0",
+                        "centro": "630eba5d10522cae4a888755",
+                        "fecha": "05/09/2022"
+                        })
+                    headers = {
+                        'Content-Type': 'application/json'
+                        }
+
+                    response = requests.request("POST", HISTORICO_URL, headers=headers, data=payload)
+
+                    print(response.text)
+                    currentEmotion = label
+                else:
+                    currentEmotion = label
+
             else:
                 cv2.putText(frame, 'No Faces', (30, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
