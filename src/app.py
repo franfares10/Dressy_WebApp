@@ -1,33 +1,54 @@
+from ast import arg
+import asyncio
+from tkinter import CENTER
 from flask import Flask,render_template,Response
+from Threads import ThreadReportingData, ThreadUdpUnity
+from tesisLecturaCuerpo import CENTRO, EMOCION, PRENDA, closeSockets, send_and_process_body_captured_data,generate_reporting_data
 import cv2
-import os
 from sys import maxsize
-#from keras.models import load_model
 from time import sleep, time
-import numpy as np
+import numpy as np 
 import tensorflow as tf
-import requests
-import json
+
+
+
 
 app=Flask(__name__)
 
-face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\src\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\src\\model\\model_v2.h5') #El que entrenamos nosotros en jupyter
-HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
+rutaHaarcascade = r'C:\\Users\\IVAN\Desktop\Dressy_WebApp\src\\model\\haarcascade_frontalface_default.xml'
+rutaClassifier = r'C:\\Users\\IVAN\Desktop\Dressy_WebApp\src\\model\\model_v2.h5'
+
+face_classifier = cv2.CascadeClassifier(rutaHaarcascade)
+classifier = tf.keras.models.load_model(rutaClassifier) #El que entrenamos nosotros en jupyter
+
+
 emotion_labels = ['Angry', 'Disgust', 'Fear','Happy', 'Neutral', 'Sad', 'Surprise']
 
 cap=cv2.VideoCapture(0)
 
+
+
 def modelPrediction():
     currentEmotion = ""
+    queue = asyncio.Queue()
     while True:
         _, frame = cap.read()
-        labels = []
+
+        #Cambie de lugar Faces para poder mandar por UDP los x,y,w,h de la cara para dibujarlo en Unity.
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_classifier.detectMultiScale(gray)
+        
 
+        thread_udp_sender = ThreadUdpUnity(frame,faces)
+
+        if(not thread_udp_sender.is_alive()):
+            thread_udp_sender.start()
+        else:
+            thread_udp_sender.run()
+            #thread_udp_sender.join()
+        
         for (x, y, w, h) in faces:
-            # Dibuja el rectangulo formando los ejes de la cara.
+            # Dibuja el rectangulo formando los ejes de la cara. Lo mando a Unity para que lo dibuje también.
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
 
             roi_gray = gray[y:y+h, x:x+w]
@@ -48,22 +69,8 @@ def modelPrediction():
                 label_position = (x, y)
                 cv2.putText(frame, label+probabilidadPreddicion, label_position,
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                if( currentEmotion!="" and label!=currentEmotion and label!="neutral"):
-                    #aca escribo en el archivo
-                    print("CAMBIE DE EMOCION")
-                    payload = json.dumps({
-                        "prenda": "630f55248ac2207315ff8b0f",
-                        "emocion": "630ea9efb0c20d906714b1c0",
-                        "centro": "630eba5d10522cae4a888755",
-                        "fecha": "05/09/2022"
-                        })
-                    headers = {
-                        'Content-Type': 'application/json'
-                        }
-
-                    response = requests.request("POST", HISTORICO_URL, headers=headers, data=payload)
-
-                    print(response.text)
+                if(label!=currentEmotion and label!="neutral"):
+                    generate_reporting_data(PRENDA,EMOCION,CENTRO)
                     currentEmotion = label
                 else:
                     currentEmotion = label
@@ -76,15 +83,15 @@ def modelPrediction():
             if not flag:
                 continue
             yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n'+ bytearray(encodedImage) + b'\r\n')
-        cv2.imshow('Emotion Detector', frame)
+        #cv2.imshow('Emotion Detector', frame)
         
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/video_feed')
+ 
+@app.route('/video_feed') 
 def video_feed():
     return Response(modelPrediction(), mimetype= "multipart/x-mixed-replace; boundary=frame")
 
@@ -93,4 +100,5 @@ if __name__=="__main__":
     app.run(debug=True)
 
 cap.release()
+closeSockets()
 cv2.destroyAllWindows()
