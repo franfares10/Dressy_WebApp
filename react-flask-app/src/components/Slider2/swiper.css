@@ -1,0 +1,64 @@
+.container{
+    margin-bottom: 4%;
+}
+
+.container h2{
+    font-size: 2rem;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #141414;
+}
+.swiper {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  border-radius: 15px;
+  position: relative;
+  text-shadow: 1px 1px 2px black;
+
+}
+
+.image-container {
+  width: 600px;
+  height: 400px;
+  position: relative;
+  border-radius: inherit;
+}
+
+.swiper-slide p{
+    font-size: medium;
+    color: black;
+    font-weight: 300;
+    position: absolute;
+    width: 100%;
+    right: 85%;
+    top: 90%;
+    transform: translate(-50%,-50%);
+    
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}

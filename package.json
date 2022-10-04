@@ -1,0 +1,19 @@
+{
+  "name": "dressy_webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franfares10/Dressy_WebApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/franfares10/Dressy_WebApp/issues"
+  },
+  "homepage": "https://github.com/franfares10/Dressy_WebApp#readme"
+}

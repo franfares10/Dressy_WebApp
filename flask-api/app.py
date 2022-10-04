@@ -1,0 +1,128 @@
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.connection import wait
+import threading
+from urllib import request
+from flask import Flask,render_template,Response,request
+import cv2
+import os
+from sys import maxsize
+#from keras.models import load_model
+from time import sleep, time
+import numpy as np
+import tensorflow as tf
+import requests
+import json
+
+app=Flask(__name__)
+lock = threading.Lock()
+face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
+classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v3.h5') #El que entrenamos nosotros en jupyter
+HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
+emotion_labels = ['Angry', 'Disgust', 'Fear','Happy', 'Neutral', 'Sad', 'Surprise']
+procesarMain = 0
+
+
+def createRegistro(prenda,emocion,centro,fecha):
+    payload = json.dumps({
+                        "prenda": prenda,
+                        "emocion": emocion,
+                        "centro": centro,
+                        "fecha": fecha
+                        })
+    headers =  {
+                'Content-Type': 'application/json'
+                }
+
+    response = requests.request("POST", HISTORICO_URL, headers=headers, data=payload)
+    print(response.text)
+
+def modelPrediction(prenda,tipo,marca,procesar):
+    global procesarMain
+    if(procesarMain):
+        global lock
+        cap=cv2.VideoCapture(0)
+        currentEmotion = ""
+        if cap.isOpened():
+            rval, frame = cap.read()
+        else:
+            rval = False
+        
+        while rval and procesarMain:
+            with lock:
+                _, frame = cap.read()
+                labels = []
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                faces = face_classifier.detectMultiScale(gray)
+                for (x, y, w, h) in faces:
+                    # Dibuja el rectangulo formando los ejes de la cara.
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
+
+                    roi_gray = gray[y:y+h, x:x+w]
+                    roi_gray = cv2.resize(roi_gray, (48, 48),interpolation=cv2.INTER_AREA)
+
+                    if np.sum([roi_gray]) != 0:
+                        
+                        roi = tf.keras.preprocessing.image.img_to_array(roi_gray)
+                        roi = np.expand_dims(roi, axis=0)
+                        
+                        prediction = classifier.predict(roi)
+
+                        label = emotion_labels[prediction.argmax()]
+                        #print(emotion_labels[np.argmax(prediction[0])])
+
+                        probabilidadPreddicion = str(prediction[0][np.argmax(prediction[0])])
+
+                        label_position = (x, y)
+                        cv2.putText(frame, label+probabilidadPreddicion, label_position,
+                                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        if( currentEmotion!="" and label!=currentEmotion and label!="Neutral"):
+                            #aca escribo en el archivo
+                            #print("CAMBIE DE EMOCION")
+                            #thread =threading.Thread(target=createRegistro,args=(prenda,tipo,marca,"06/09/2022"))
+                            #thread.start()
+                                
+                            currentEmotion = label
+                        else:
+                            currentEmotion = label
+                    
+                    (flag, encodedImage) = cv2.imencode(".jpg",frame)
+
+                    yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n'+ bytearray(encodedImage) + b'\r\n')
+                cv2.imshow('Emotion Detector', frame)
+                if not procesarMain:
+                    cap.release()
+                    cv2.destroyAllWindows() 
+                    print("DESTRUI TODO")
+                    break
+        cap.release()
+        cv2.destroyAllWindows() 
+        print("DESTRUI TODO")
+                    
+    else:
+        cap.release()
+        cv2.destroyAllWindows() 
+        print("DESTRUI TODO")
+
+
+@app.route('/video_feed',methods = ['GET'])
+def video_feed():
+    prenda = request.args.get('prenda')
+    tipo = request.args.get('tipo')
+    marca = request.args.get('marca')
+    procesar = request.args.get('procesar')
+    global procesarMain
+    procesarMain = procesar
+    print("PROCESAR"+procesar)
+    return Response(modelPrediction(prenda,tipo,marca,procesar), mimetype= "multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route('/stop_video',methods = ['POST'])
+def stop_video():
+    global procesarMain
+    procesarMain = 0
+    return "termino todo bien"
+if __name__=="__main__":
+    app.run(debug=False)
+
+
+cv2.destroyAllWindows() 
