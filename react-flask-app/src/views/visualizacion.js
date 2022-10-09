@@ -8,8 +8,9 @@ import './visualizacion.css'
 export default function Visualizacion (){
     const location = useLocation()
     let procesar = location.state[1]
-    const prenda = location.state[0]
-    console.log(prenda)
+    let prenda = location.state[0]
+    //Uso la descripcion como ID unico.
+    console.log("La prenda que eligió el user: "+JSON.stringify(location.state[0]))  
     console.log(procesar)
 
 return(

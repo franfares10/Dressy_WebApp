@@ -9,6 +9,7 @@ import history from "../../utils/history";
 import { Pagination } from "swiper";
 import Visualizacion from "../../views/visualizacion";
 import{Routes,Route,Link, Router,BrowserRouter} from 'react-router-dom'
+import postWebSocket from "../../controllers/WebSocketController";
 
 const Slider = (prendas, tipo) => {
   
@@ -28,11 +29,11 @@ const Slider = (prendas, tipo) => {
           return (
             <SwiperSlide key={index} className="swiper-slide">
               <div className="image-container">
-                <Link  to={"/visualizacion"} state={[prenda,1]} >
-                <img src={prenda.img_url} alt={prenda.descripcion} />
+                <Link  to={"/visualizacion"} state={[prenda,1]}>
+                <img   src={prenda.img_url} alt={prenda.descripcion} />
                 <p>{prenda.descripcion}</p>
                 </Link>
-              </div>
+              </div> 
             </SwiperSlide>
           );
         })}
