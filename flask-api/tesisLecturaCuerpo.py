@@ -22,19 +22,19 @@ prendaEnviada = ""
 
 # Variables sockets
 senderSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-testingSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-
 senderSocket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFFER_SIZE)
+print(socket.gethostname())
+print(socket.gethostbyname(socket.gethostname()))
 #Creo Socket de prueba para testear si el puerto esta abierto. (el de la prenda en Unity.)
-testingSocket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFFER_SIZE)
+
 
 serverAdressPort = ("127.0.0.1", 8079)
-serverAdressPortCamara = ("127.0.0.1", 8080) #Renderiza la imagen de la camara aca en C Sharp
+serverAdressPortCamara = ("127.0.0.1", 8082) #Renderiza la imagen de la camara aca en C Sharp
 serverAdressCenterPoint = ("127.0.0.1", 8200)  # Renderiza el punto central del usuario en C Sharp.
 serverAdressPortReporting = ("127.0.0.1", 8085) 
 serverAdressPortLogicaRopa = ("127.0.0.1", 9100) #Render ropa 
 
-def send_prendas_udp(prendaObjeto):
+def send_prendas_udp(prendaObjeto): 
     #Me aseguro que esté escuchando el puerto cuando arranca
     senderSocket.sendto(str.encode(str(prendaObjeto)),serverAdressPortLogicaRopa)
 
@@ -86,6 +86,7 @@ def send_emotion_label_information(x, y, w, h):
 
 
 def closeSockets():
+    print("Cerrando los sockets")
     senderSocket.close()
 
 def draw_alert_message(img,faces_coordinates,lmList): 

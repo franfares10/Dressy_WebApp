@@ -10,9 +10,10 @@ from sys import maxsize
 from time import sleep, time
 import numpy as np
 import tensorflow as tf
-import requests
+import requests 
 import json
 from tesisLecturaCuerpo import CENTRO, EMOCION, PRENDA, closeSockets, generate_reporting_data, send_and_process_body_captured_data,send_prendas_udp
+from ImagenUnity import generate_frames,close_unity_socket
 #from flask_cors import CORS
 
 app=Flask(__name__)
@@ -127,7 +128,15 @@ def video_feed():
 def stop_video():
     global procesarMain
     procesarMain = 0
+    closeSockets()
+    close_unity_socket()
     return "termino todo bien"
+
+@app.route('/unity_image',methods=['GET'])
+def render_unity_image():
+    return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 if __name__=="__main__":
     threadPool = ThreadPoolExecutor(max_workers=2)
     app.run(debug=False)
