@@ -16,9 +16,9 @@ import json
 app=Flask(__name__)
 lock = threading.Lock()
 face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v3.h5') #El que entrenamos nosotros en jupyter
+classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v6.h5') #El que entrenamos nosotros en jupyter
 HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
-emotion_labels = ['Angry', 'Disgust', 'Fear','Happy', 'Neutral', 'Sad', 'Surprise']
+emotion_labels = ['happy', 'neutral', 'sad']
 procesarMain = 0
 
 

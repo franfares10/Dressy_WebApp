@@ -43,22 +43,53 @@
   border-radius: inherit;
 }
 
-.swiper-slide p{
-    font-size: medium;
-    color: black;
-    font-weight: 300;
-    position: absolute;
-    width: 100%;
-    right: 85%;
-    top: 90%;
-    transform: translate(-50%,-50%);
-    
+.brand-container {
+  max-width: 120px;
+  max-height: 80px;
+  position: absolute;
+  width: 100%;
+    right: 2%;
+    top: 15%;
+    transform: translate(-25%,-50%);
 }
 
-.swiper-slide img {
+.brand{
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
 }
+
+.product-description{
+    font-size: medium;
+    color: black;
+    font-weight: 300;
+    position: absolute;
+    width: 100%;
+    left: 25%;
+    top: 90%;
+    transform: translate(-50%,-50%);
+    
+}
+
+.product-price{
+  font-size: large;
+  color: #17B907;
+  font-weight: bold;
+  position: absolute;
+  width: 100%;
+  left: 80%;
+  top: 90%;
+  transform: translate(-50%,-50%);
+  
+}
+
+.prenda {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+

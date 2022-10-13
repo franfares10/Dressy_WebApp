@@ -5,16 +5,19 @@ import '../views/Home.css'
 export default function Home(){
     const[remeras,setRemeras] = useState([]);
     const[pantalones,setPantalones] = useState([]);
+    const[calzados,setCalzado] = useState([])
 
     useEffect( () => {
          getPrendaByTipo('Remera',setRemeras)
          getPrendaByTipo('Pantalon',setPantalones)
+         getPrendaByTipo('Calzados',setCalzado)
     }, []);
 
     return(
         <div>
             <Slider prendas={remeras} tipo='Remeras'/>
             <Slider prendas={pantalones} tipo='Pantalones'/>
+            <Slider prendas={calzados} tipo = 'Calzados'/>
         </div>
     )
 }
