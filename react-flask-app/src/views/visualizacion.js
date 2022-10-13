@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom'
 import{Routes,Route,Link, Router,BrowserRouter} from 'react-router-dom'
 import stopThreads from "../controllers/concurrencyController";
 import './visualizacion.css'
-import { Unity, useUnityContext } from "react-unity-webgl";
 
 
 export default function Visualizacion (){
