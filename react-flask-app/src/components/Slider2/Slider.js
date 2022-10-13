@@ -9,6 +9,7 @@ import history from "../../utils/history";
 import { Pagination } from "swiper";
 import Visualizacion from "../../views/visualizacion";
 import{Routes,Route,Link, Router,BrowserRouter} from 'react-router-dom'
+import postWebSocket from "../../controllers/WebSocketController";
 
 const Slider = (prendas, tipo) => {
   
@@ -37,7 +38,7 @@ const Slider = (prendas, tipo) => {
                   <img className="brand" src={prenda.marca.url_marca}/>
                 </div>
                 </Link>
-              </div>
+              </div> 
             </SwiperSlide>
           );
         })}

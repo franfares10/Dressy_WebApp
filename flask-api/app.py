@@ -10,10 +10,14 @@ from sys import maxsize
 from time import sleep, time
 import numpy as np
 import tensorflow as tf
-import requests
+import requests 
 import json
+from tesisLecturaCuerpo import CENTRO, EMOCION, PRENDA, closeSockets, generate_reporting_data, send_and_process_body_captured_data,send_prendas_udp
+from ImagenUnity import generate_frames,close_unity_socket
+#from flask_cors import CORS
 
 app=Flask(__name__)
+#CORS(app)
 lock = threading.Lock()
 face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
 classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v6.h5') #El que entrenamos nosotros en jupyter
@@ -52,7 +56,9 @@ def modelPrediction(prenda,tipo,marca,procesar):
                 _, frame = cap.read()
                 labels = []
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                faces = face_classifier.detectMultiScale(gray)
+                faces = face_classifier.detectMultiScale(gray, minNeighbors=10)
+
+                threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
                 for (x, y, w, h) in faces:
                     # Dibuja el rectangulo formando los ejes de la cara.
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
@@ -76,11 +82,7 @@ def modelPrediction(prenda,tipo,marca,procesar):
                         cv2.putText(frame, label+probabilidadPreddicion, label_position,
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                         if( currentEmotion!="" and label!=currentEmotion and label!="Neutral"):
-                            #aca escribo en el archivo
-                            #print("CAMBIE DE EMOCION")
-                            #thread =threading.Thread(target=createRegistro,args=(prenda,tipo,marca,"06/09/2022"))
-                            #thread.start()
-                                
+                            #threadPool.submit(generate_reporting_data,PRENDA, EMOCION, CENTRO)
                             currentEmotion = label
                         else:
                             currentEmotion = label
@@ -97,12 +99,17 @@ def modelPrediction(prenda,tipo,marca,procesar):
         cap.release()
         cv2.destroyAllWindows() 
         print("DESTRUI TODO")
-                    
+        print("Antes:", threading.enumerate())
+        #threadPool.shutdown(cancel_futures=True)
+        #threadPool.shutdown(wait=True) #Bajo el Pool de Threads incluso si quedó alguno corriendo.
+        print("Dps:", threading.enumerate())
     else:
-        cap.release()
+        cap.release() #Esta accediendo a algo que está definido en otro lugar, borrar y ver que pasa.
         cv2.destroyAllWindows() 
         print("DESTRUI TODO")
-
+        print("Antes else:", threading.enumerate())
+        threadPool.shutdown(wait=True,cancel_futures=True)  #Bajo el Pool de Threads incluso si quedó alguno corriendo.
+        print("Dps Else:", threading.enumerate())
 
 @app.route('/video_feed',methods = ['GET'])
 def video_feed():
@@ -113,6 +120,7 @@ def video_feed():
     global procesarMain
     procesarMain = procesar
     print("PROCESAR"+procesar)
+    #send_prendas_udp(prenda)
     return Response(modelPrediction(prenda,tipo,marca,procesar), mimetype= "multipart/x-mixed-replace; boundary=frame")
 
 
@@ -120,8 +128,17 @@ def video_feed():
 def stop_video():
     global procesarMain
     procesarMain = 0
+    closeSockets()
+    close_unity_socket()
     return "termino todo bien"
+
+@app.route('/unity_image',methods=['GET'])
+def render_unity_image():
+    return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 if __name__=="__main__":
+    threadPool = ThreadPoolExecutor(max_workers=2)
     app.run(debug=False)
 
 
