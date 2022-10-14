@@ -9,15 +9,10 @@ export default function Visualizacion (){
     const location = useLocation()
     let procesar = location.state[1]
     let prenda = location.state[0]
-
+    console.log(prenda)
 return(
     <div className="container-prediction-image">
-        <img src={'/video_feed?prenda='+prenda.descripcion+'&tipo='+prenda.tipo+'&marca='+prenda.marca.nombre+'&procesar='+procesar}/>
-        
-        <button onClick={(e)=>{e.preventDefault();
-        window.open("http://localhost:3000/unity")}}>
-            Ir a imagen unity
-        </button>
+        <img src={'/video_feed?prenda='+prenda._id+'&tipo='+prenda.tipo+'&marca='+prenda.marca.nombre+'&procesar='+procesar}/>
         
         <Link to={'/'}>
         <button onClick={() =>{
