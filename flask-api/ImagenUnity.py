@@ -15,20 +15,7 @@ def generate_frames():
     print("Inicio el señor sockete")
     while True:
             msg, clien_addr = senderSocket.recvfrom(BUFFER_SIZE)
-            imagen = np.frombuffer(msg,dtype=np.uint8)
-            #encodeado = base64.b64encode(imagen)
-            decoded_image = cv2.imdecode(imagen,cv2.IMREAD_COLOR)
-            imagen_jpg = cv2.imencode(".jpg",decoded_image)
-            #cv2.imshow("Imagen",MOSTRAR)
-            #cv2.waitKey()
-            print(msg==bytearray(msg))
-            yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n'+ bytearray(msg) + b'\r\n')  # concat frame one by one and show result
-
-            #break
-            #cv2.imshow("Realidad Aumentada",MOSTRAR)
-            #Asi escribe las cosas
-            #return MOSTRAR
-            #break
+            yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n'+ bytearray(msg) + b'\r\n')
 
 def close_unity_socket():
     senderSocket.close()
