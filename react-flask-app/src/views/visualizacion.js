@@ -14,10 +14,7 @@ return(
     <div className="container-prediction-image">
         <img src={'/video_feed?prenda='+prenda.descripcion+'&tipo='+prenda.tipo+'&marca='+prenda.marca.nombre+'&procesar='+procesar}/>
         
-        <button onClick={(e)=>{e.preventDefault();
-        window.open("http://localhost:3000/unity")}}>
-            Ir a imagen unity
-        </button>
+        <img src={'/unity_image'} width={480} height={640}/>
         
         <Link to={'/'}>
         <button onClick={() =>{
