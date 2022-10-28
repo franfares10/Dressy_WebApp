@@ -33,7 +33,6 @@ const Slider = (prendas, tipo) => {
                 <img className="prenda" src={prenda.img_url} alt={prenda.descripcion} />
                 <p className="product-description">{prenda.descripcion}</p>
                 <p className="product-price">{prenda.precio}$</p>
-
                 <div className="brand-container">
                   <img className="brand" src={prenda.marca.url_marca}/>
                 </div>
