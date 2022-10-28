@@ -1,7 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing.connection import wait
 import threading
+from tkinter.tix import Tree
 from urllib import request
+from webbrowser import get
 from flask import Flask,render_template,Response,request
 import cv2
 import os
@@ -19,12 +21,14 @@ from ImagenUnity import generate_frames,close_unity_socket
 app=Flask(__name__)
 #CORS(app)
 lock = threading.Lock()
-face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
+face_classifier = cv2.CascadeClassifier(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
+classifier = tf.keras.models.load_model(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
 HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
 emotion_labels = ['disgust', 'happy', 'neutral','sad','surprise']
 CENTRO = "630eba5d10522cae4a888755"
 procesarMain = 0
+global legalState
+legalState = False
 
 
 def createRegistro(prenda,emocion,centro):
@@ -58,7 +62,7 @@ def modelPrediction(prenda,tipo,marca,procesar):
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = face_classifier.detectMultiScale(gray, minNeighbors=10)
 
-                #threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
+                threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
                 for (x, y, w, h) in faces:
                     # Dibuja el rectangulo formando los ejes de la cara.
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
@@ -82,10 +86,14 @@ def modelPrediction(prenda,tipo,marca,procesar):
                         cv2.putText(frame, label+probabilidadPreddicion, label_position,
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                         if( currentEmotion!="" and label!=currentEmotion and label!="neutral"):
-                            print("CAMBIE DE EMOCION")
-                            thread =threading.Thread(target=createRegistro,args=(prenda,label,CENTRO))
-                            thread.start()
-                            #threadPool.submit(generate_reporting_data,PRENDA, EMOCION, CENTRO)
+                            global legalState #Terminar esto
+                            if(not legalState):
+                                print("No acepto TyC, no podemos guardar informacion")
+                            else:
+                                print("CAMBIE DE EMOCION")
+                                #thread =threading.Thread(target=createRegistro,args=(prenda,label,CENTRO))
+                                #thread.start()
+                                #threadPool.submit(generate_reporting_data,PRENDA, EMOCION, CENTRO)
                             currentEmotion = label
                         else:
                             currentEmotion = label
@@ -103,8 +111,8 @@ def modelPrediction(prenda,tipo,marca,procesar):
         cv2.destroyAllWindows() 
         print("DESTRUI TODO")
         print("Antes:", threading.enumerate())
-        #threadPool.shutdown(cancel_futures=True)
-        #threadPool.shutdown(wait=True) #Bajo el Pool de Threads incluso si quedó alguno corriendo.
+        threadPool.shutdown(wait=True) #Bajo el Pool de Threads incluso si quedó alguno corriendo.
+        threadPool.shutdown(cancel_futures=True)
         print("Dps:", threading.enumerate())
     else:
         cap.release() #Esta accediendo a algo que está definido en otro lugar, borrar y ver que pasa.
@@ -131,7 +139,7 @@ def video_feed():
 def stop_video():
     global procesarMain
     procesarMain = 0
-    #closeSockets()
+    closeSockets()
     #close_unity_socket()
     return "termino todo bien"
 
@@ -139,9 +147,16 @@ def stop_video():
 def render_unity_image():
     return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/termsAndConditions',methods=['POST'])
+def set_terms_and_conditions():
+    #Generar llamado que le pegue a este endpoint y verificar que no guarda la informacion.
+    global legalState
+    legalState = request.args.get('terms')
+    return "ok"
+
 
 if __name__=="__main__":
-    #threadPool = ThreadPoolExecutor(max_workers=2)
+    threadPool = ThreadPoolExecutor(max_workers=2)
     app.run(debug=False)
 
 
