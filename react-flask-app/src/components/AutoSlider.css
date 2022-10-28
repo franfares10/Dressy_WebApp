@@ -1,0 +1,25 @@
+
+.containerSwiperModal{
+    text-align: center;
+    background-image: url("../assets/shoppingEdit.jpg");
+    width: "100%";
+    max-width: fit-content;
+}
+
+.swiperSpace{
+    padding-top: 5%;
+}
+
+
+.boton{
+    padding-top: 5%;
+    height: 100px;
+}
+
+
+.image-container {
+    width: 600px;
+    height: 600px;
+    position: relative;
+    border-radius: inherit;
+  }

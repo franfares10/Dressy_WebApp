@@ -8,11 +8,9 @@ import history from "../../utils/history";
 // import required modules
 import { Pagination } from "swiper";
 import Visualizacion from "../../views/visualizacion";
-import{Routes,Route,Link, Router,BrowserRouter} from 'react-router-dom'
-import postWebSocket from "../../controllers/WebSocketController";
+import { Routes, Route, Link, Router, BrowserRouter } from "react-router-dom";
 
 const Slider = (prendas, tipo) => {
-  
   return (
     <div className="container">
       <h2>{prendas.tipo}</h2>
@@ -29,16 +27,22 @@ const Slider = (prendas, tipo) => {
           return (
             <SwiperSlide key={index} className="swiper-slide">
               <div className="image-container">
-                <Link  to={"/visualizacion"} state={[prenda,1]} >
-                <img className="prenda" src={prenda.img_url} alt={prenda.descripcion} />
-                <p className="product-description">{prenda.descripcion}</p>
-                <p className="product-price">{prenda.precio}$</p>
+                <Link to={"/visualizacion"} state={[prenda, 1]}>
+                  <img
+                    className="prenda"
+                    src={prenda.img_url}
+                    alt={prenda.descripcion}
+                  />
 
-                <div className="brand-container">
-                  <img className="brand" src={prenda.marca.url_marca}/>
-                </div>
+                  <p className="product-description">{prenda.descripcion}</p>
+
+                  <p className="product-price">{prenda.precio}$</p>
+
+                  <div className="brand-container">
+                    <img className="brand" src={prenda.marca.url_marca} />
+                  </div>
                 </Link>
-              </div> 
+              </div>
             </SwiperSlide>
           );
         })}
