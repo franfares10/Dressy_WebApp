@@ -1,10 +1,10 @@
 import Slider from "./Slider2/Slider";
-import logo from "../assets/logo10.png";
+import logo from "../assets/logo2.png";
 import { Pagination, Navigation, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Pagina1 from "../assets/Pagina1.png";
-import Pagina2 from "../assets/Pagina2.png";
-import Pagina3 from "../assets/Pagina3.png";
+import Pagina1 from "../assets/Pagina6.png";
+import Pagina2 from "../assets/Pagina5.png";
+import Pagina3 from "../assets/Pagina4.png";
 import Shopping from "../assets/shoppingEdit.jpg";
 import "swiper/css/autoplay";
 import "./AutoSlider.css";
@@ -12,6 +12,7 @@ import { Button, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
 import ConfigModal from "./ConfigModal";
 import { useState } from "react";
+
 
 export default function AutoSlider() {
   const imagenesAyuda = [
@@ -27,14 +28,12 @@ export default function AutoSlider() {
 
   return (
     <div className="containerSwiperModal">
-      <img src={logo} style={{ maxHeight: 100 }} />
+      <img src={logo} className='logo' />
       <div className="swiperSpace">
         <Swiper
+          className="swiper"
           slidesPerView={1}
           spaceBetween={30}
-          pagination={{
-            clickable: true,
-          }}
           autoplay={{ delay: 3000 }}
           modules={[Pagination, Navigation, Autoplay]}
           onAutoplay={(e)=>{document.querySelector(".swiper-slide-active").style.background = '#FFFFFF00'}}
@@ -48,7 +47,7 @@ export default function AutoSlider() {
               >
                 <div className="image-container">
                   <img
-                    className="descripcion"
+                    className="image"
                     src={imagen.url_marca}
                     alt={imagen.descripcion}
                   />
@@ -58,7 +57,7 @@ export default function AutoSlider() {
           })}
         </Swiper>
       </div>
-      <div className="boton">
+      <div className="button-container">
         <ConfigModal />
       </div>
     </div>

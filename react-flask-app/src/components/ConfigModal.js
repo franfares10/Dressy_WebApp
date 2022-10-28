@@ -10,11 +10,10 @@ import {
 import { useState } from "react";
 import GenderCard from "./GenderCard";
 import LegalTerms from "./LegalTerms";
+import { Link } from "react-router-dom";
+import "./ConfigModal.css";
 
-const stepperOptions = [
-  "Aceptar términos y condiciones de Dressy",
-  "Elegir género",
-];
+const stepperOptions = ["Términos y condiciones", "Elegir género"];
 
 export default function ConfigModal() {
   const [openModal, setOpenModal] = useState(false);
@@ -29,6 +28,10 @@ export default function ConfigModal() {
     }
   };
 
+  const handleMinusStep = async () => {
+    setCountStep((prevCountStep) => prevCountStep - 1);
+  };
+
   const handleClose = () => {
     setOpenModal(false);
     setCountStep(0);
@@ -39,8 +42,8 @@ export default function ConfigModal() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 900,
-    height: 400,
+    width: "60%",
+    height: "40%",
     bgcolor: "background.white",
     boxShadow: 24,
     p: 4,
@@ -49,14 +52,15 @@ export default function ConfigModal() {
   return (
     <div>
       <Button
+        className="botonIrProbador"
+        style={{ backgroundColor: "#545fef" }}
         variant="contained"
-        color="secondary"
         onClick={(e) => {
           e.preventDefault();
           setOpenModal(true);
         }}
       >
-        Comenzar la experiencia!
+        Ir al Probador
       </Button>
 
       <Modal
@@ -66,13 +70,21 @@ export default function ConfigModal() {
         aria-describedby="modal-modal-description"
       >
         <Box style={style}>
-          <div style={{ backgroundColor: "white" }}>
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "5px",
+              borderRadius: "10px",
+            }}
+          >
             <Stepper activeStep={countStep} orientation="vertical">
               <Step key={stepperOptions[0]}>
                 <StepLabel>{stepperOptions[0]}</StepLabel>
                 <StepContent>
                   <LegalTerms />
+
                   <Button
+                    style={{ float: "right", marginRight: "5px" }}
                     variant="contained"
                     color="primary"
                     onClick={(e) => {
@@ -88,16 +100,16 @@ export default function ConfigModal() {
                 <StepLabel>{stepperOptions[1]}</StepLabel>
                 <StepContent>
                   <GenderCard />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePlusStep();
-                    }}
-                  >
-                    Continuar
-                  </Button>
+                  <div style={{ display: "inline-block" , float:'right',marginRight:'20px', marginTop:'10px',marginBottom:'10px'}}>
+                    <Button variant="contained" color="error" style={{marginRight:'15px'}} onClick={handleMinusStep}>
+                      Volver
+                    </Button>
+                    <Link to={"/home"}>
+                      <Button variant="contained" color="primary">
+                        Continuar
+                      </Button>
+                    </Link>
+                  </div>
                 </StepContent>
               </Step>
             </Stepper>

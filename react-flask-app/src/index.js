@@ -9,7 +9,6 @@ import AutoSlider from "./components/AutoSlider";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <AutoSlider />
     <App />
   </BrowserRouter>
 );

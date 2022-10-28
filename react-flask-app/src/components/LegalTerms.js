@@ -28,8 +28,7 @@ export default function LegalTerms() {
   };
 
   return (
-    <Card sx={{ width: "500", height: "500" }}>
-      <CardContent>
+      <div style={{padding:'5px'}}>
         <Typography gutterBottom variant="h5">
           Términos y Condiciones de Dressy
         </Typography>
@@ -60,7 +59,6 @@ export default function LegalTerms() {
             />
           </FormGroup>
         </CardActions>
-      </CardContent>
-    </Card>
+        </div>
   );
 }

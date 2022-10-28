@@ -8,19 +8,18 @@ import Visualizacion from "./views/visualizacion";
 import UnityRenderer from "./views/UnityRenderer";
 import AutoSlider from "./components/AutoSlider";
 
+
 function App() {
+  let altura = window.screen.height;
+  let ancho = window.screen.width
   return (
     <div className='app-container'>
-      <ResponsiveAppBar />
-      <div>
-        <Container maxWidth="xl">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<AutoSlider />} />
+            <Route path="/home" element={<Home/>}/>
             <Route path="/visualizacion" element={<Visualizacion />} />
             <Route path="/unity" element={<UnityRenderer />}></Route>
           </Routes>
-        </Container>
-      </div>
     </div>
   );
 }

@@ -7,8 +7,7 @@ export default function GenderCard() {
     localStorage.setItem("genero", gender);
   };
   return (
-    <Card>
-      <CardContent>
+    <div style={{padding:'5px'}}>
         <Typography variant="h3">Elija su género</Typography>
         <Typography variant="body2">
           Clickee el género con el que se identifique, en caso de que no desee hacerlo, o no se sienta identificado con ninguna opción, pulse
@@ -31,7 +30,6 @@ export default function GenderCard() {
             onClick={()=>{saveToLocalStorage("mujer")}}
           />
         </div>
-      </CardContent>
-    </Card>
+        </div>
   );
 }
