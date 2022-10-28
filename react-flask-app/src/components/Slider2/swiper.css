@@ -67,10 +67,10 @@
     font-weight: 300;
     position: absolute;
     width: 100%;
-    left: 25%;
-    top: 90%;
-    transform: translate(-50%,-50%);
-    
+    right: 45%;
+    top: 75%;
+    transform: translate(-25%,-25%);
+    transform: rotate(-90deg);   
 }
 
 .product-price{

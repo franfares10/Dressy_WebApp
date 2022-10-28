@@ -23,8 +23,6 @@ prendaEnviada = ""
 # Variables sockets
 senderSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 senderSocket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFFER_SIZE)
-print(socket.gethostname())
-print(socket.gethostbyname(socket.gethostname()))
 #Creo Socket de prueba para testear si el puerto esta abierto. (el de la prenda en Unity.)
 
 
@@ -44,13 +42,14 @@ def from_image_to_matrix(imagen):
     encoded_info, buffer = cv2.imencode('.jpg', formatted_image,
                                         [cv2.IMWRITE_JPEG_QUALITY, 80])  # Encode de la imagen para preservar la calidad
     encoded_message = base64.b64encode(buffer)
+    print("Se está mandando este mensaje: {}".format(len(encoded_message)))
     return encoded_message
 
 
 def send_and_process_body_captured_data(img,faces,prendaElegida): #FaceCoordinates es el x,y,w,h
     senderSocket.sendto(from_image_to_matrix(img), serverAdressPortCamara)
-    img = detector.findPose(img)
-    lmList, bboxInfo = detector.findPosition(img, bboxWithHands=False) 
+    img = detector.findPose(img,draw=False)
+    lmList, bboxInfo = detector.findPosition(img, bboxWithHands=False,draw=False) 
     dataUnity = []  # La necesito refrescar para que se envie
     dataUnityCenteredPoint = []
     if bboxInfo:
@@ -59,7 +58,7 @@ def send_and_process_body_captured_data(img,faces,prendaElegida): #FaceCoordinat
             dataUnity.extend([lm[1], img.shape[0] - lm[2], lm[3]])  # Sino cambiarlo a height  
         #480 - componente en Y.
         dataUnityCenteredPoint.extend([lmList[12][1]-((lmList[12][1]-lmList[11][1])//2),(lmList[23][2]-((lmList[23][2]-lmList[11][2])//2))])
-    senderSocket.sendto(str.encode(str(dataUnity)), serverAdressPort)  # Envio por UDP los datos, no lo necesitaríamos más.
+    #senderSocket.sendto(str.encode(str(dataUnity)), serverAdressPort)  # Envio por UDP los datos, no lo necesitaríamos más.
     senderSocket.sendto(str.encode(str(dataUnityCenteredPoint)), serverAdressCenterPoint)
     send_prendas_udp(prendaElegida)
     
