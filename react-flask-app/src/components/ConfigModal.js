@@ -12,6 +12,7 @@ import GenderCard from "./GenderCard";
 import LegalTerms from "./LegalTerms";
 import { Link } from "react-router-dom";
 import "./ConfigModal.css";
+import postTermsAndGender from "../controllers/SliderController";
 
 const stepperOptions = ["Términos y condiciones", "Elegir género"];
 
@@ -82,7 +83,6 @@ export default function ConfigModal() {
                 <StepLabel>{stepperOptions[0]}</StepLabel>
                 <StepContent>
                   <LegalTerms />
-
                   <Button
                     style={{ float: "right", marginRight: "5px" }}
                     variant="contained"
@@ -100,12 +100,25 @@ export default function ConfigModal() {
                 <StepLabel>{stepperOptions[1]}</StepLabel>
                 <StepContent>
                   <GenderCard />
-                  <div style={{ display: "inline-block" , float:'right',marginRight:'20px', marginTop:'10px',marginBottom:'10px'}}>
-                    <Button variant="contained" color="error" style={{marginRight:'15px'}} onClick={handleMinusStep}>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      float: "right",
+                      marginRight: "20px",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="error"
+                      style={{ marginRight: "15px" }}
+                      onClick={handleMinusStep}
+                    >
                       Volver
                     </Button>
                     <Link to={"/home"}>
-                      <Button variant="contained" color="primary">
+                      <Button variant="contained" color="primary" onClick={(e)=>{postTermsAndGender()}}>
                         Continuar
                       </Button>
                     </Link>

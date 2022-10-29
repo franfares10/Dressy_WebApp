@@ -18,11 +18,13 @@ export default function LegalTerms() {
   const [isCheckNotAccepted, setIsNotAccepted] = useState(false);
 
   const handleClickAccepted = () => {
+    localStorage.setItem("terminos","True");
     setIsAccepted(true);
     setIsNotAccepted(false);
     
   };
   const handleClickNotAccepted = () => {
+    localStorage.setItem("terminos","False");
     setIsAccepted(false);
     setIsNotAccepted(true);
   };

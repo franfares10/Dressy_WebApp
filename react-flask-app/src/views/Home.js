@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { default as Slider } from "../components/Slider2/Slider";
-import { default as getPrendaByTipo } from "../controllers/prendaController";
+import {getPrendaByTipo,getPrendaByTipoAndGenero} from "../controllers/prendaController";
 import "../views/Home.css";
 import ResponsiveAppBar from "../components/AppBar";
 import { Container } from "@mui/system";
@@ -9,11 +9,12 @@ export default function Home() {
   const [remeras, setRemeras] = useState([]);
   const [pantalones, setPantalones] = useState([]);
   const [calzados, setCalzado] = useState([]);
-
+  const genero = localStorage.getItem("genero")
+  
   useEffect(() => {
-    getPrendaByTipo("Remera", setRemeras);
-    getPrendaByTipo("Pantalon", setPantalones);
-    getPrendaByTipo("Calzados", setCalzado);
+    getPrendaByTipo("Remera", setRemeras , genero);
+    getPrendaByTipo("Pantalon", setPantalones, genero);
+    getPrendaByTipo("Calzados", setCalzado , genero);
   }, []);
 
   return (
