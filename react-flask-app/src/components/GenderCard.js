@@ -1,11 +1,36 @@
-import { Card, CardContent, Typography } from "@mui/material";
 import MenIcon from "../assets/menIcon.png";
 import WomenIcon from "../assets/womenIcon.png";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 
 export default function GenderCard() {
   const saveToLocalStorage = (gender) => {
     localStorage.setItem("genero", gender);
   };
+
+  const [isCheckAccepted, setIsAccepted] = useState(false);
+  const [isCheckNotAccepted, setIsNotAccepted] = useState(false);
+
+  const handleClickAccepted = () => {
+    setIsAccepted(true);
+    setIsNotAccepted(false);
+    
+  };
+  const handleClickNotAccepted = () => {
+    setIsAccepted(false);
+    setIsNotAccepted(true);
+  };
+
   return (
     <div style={{padding:'5px'}}>
         <Typography variant="h3">Elija su género</Typography>
@@ -14,22 +39,32 @@ export default function GenderCard() {
           continuar. En caso de no haber elegido, no se aplicará el filtro por
           género a las prendas.
         </Typography>
-        <div style={{ display:"flex",justifyContent:"space-around",paddingTop:"25px"}}>
-          <img
-            src={MenIcon}
-            width={250}
-            height={250}
-            alt="hombre"
-            onClick={()=>{saveToLocalStorage("hombre")}}
-          />
-          <img
-            src={WomenIcon}
-            width={250}
-            height={250}
-            alt="mujer"
-            onClick={()=>{saveToLocalStorage("mujer")}}
-          />
-        </div>
+        <CardActions>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isCheckAccepted}
+                  onClick={(e) => {
+                    handleClickAccepted();
+                  }}
+                />
+              }
+              label="Hombre"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isCheckNotAccepted}
+                  onClick={(e) => {
+                    handleClickNotAccepted();
+                  }}
+                />
+              }
+              label="Mujer"
+            />
+          </FormGroup>
+        </CardActions>
         </div>
   );
 }

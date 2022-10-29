@@ -21,8 +21,8 @@ from ImagenUnity import generate_frames,close_unity_socket
 app=Flask(__name__)
 #CORS(app)
 lock = threading.Lock()
-face_classifier = cv2.CascadeClassifier(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
+face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
+classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
 HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
 emotion_labels = ['disgust', 'happy', 'neutral','sad','surprise']
 CENTRO = "630eba5d10522cae4a888755"

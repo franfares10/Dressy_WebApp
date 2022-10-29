@@ -1,48 +1,23 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Grid, Item } from "@mui/material";
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Routes, Route, Link, Router, BrowserRouter } from "react-router-dom";
 import LoadingCard from "../components/LoadingCard";
 import stopThreads from "../controllers/concurrencyController";
+import ejemplo from "../assets/Pagina4.png";
+import ejemplo2 from "../assets/Pagina5.png";
+import ResponsiveAppBar from "../components/AppBar";
 import "./visualizacion.css";
-
-export default function Visualizacion() {
-  const location = useLocation();
-  const [canShow, setCanShow] = useState(false);
-  const [showFacial, setShowFacial] = useState(false);
-
-  const handleOnOpen = () => {
-    console.log("Arranca por aca titanbnn");
-    setCanShow(true);
-  };
-
-  let procesar = location.state[1];
-  let prenda = location.state[0];
-
-  return (
-    <div className="container-prediction-image">
-      {
-        //Preguntarle al fares si sabe como borrar el numero que retorna este setInterval. Es tipo un id que retorna siempre.
-        //Preguntar lo del index a fran.
-
-        setInterval(function () {
-          checkTime(setCanShow);
-          //Borrar si no funca
-        }, 1000)
-      }
-      {!canShow ? (
-        <LoadingCard />
-      ) : (
-        <img
+import { height, width } from "@mui/system";
+/* ESTA VA PRIMERO<img
           src={"/unity_image"}
           width={640}
           height={480}
           id="Unity"
           style={{ visibility: "visible" }}
         />
-      )}
-
-      <img
+        
+         <img
         src={
           "/video_feed?prenda=" +
           prenda._id +
@@ -56,30 +31,7 @@ export default function Visualizacion() {
         id="imagenUser"
         style={{ visibility: "visible" }}
       />
-
-      <Button
-      variant="outlined"
-        onClick={() => {
-          procesar = 0;
-          stopThreads(prenda, 0);
-          window.history.go("-1");
-        }}
-      >
-        Volver
-      </Button>
-
-      <Button
-        variant="contained"
-        onClick={(e) => {
-          e.preventDefault();
-          turnOnFacialRecognition(showFacial, setShowFacial);
-        }}
-      >
-        Ver reconocimiento facial
-      </Button>
-    </div>
-  );
-}
+        */
 
 const checkTime = (setCanShow) => {
   try {
@@ -88,7 +40,6 @@ const checkTime = (setCanShow) => {
     if (result === false) {
       //No cargo la imagen todavía, lo dejo como esta.
     } else {
-      console.log("Paso por aca");
       setCanShow(true);
     }
   } catch (e) {
@@ -97,16 +48,101 @@ const checkTime = (setCanShow) => {
 };
 
 const turnOnFacialRecognition = (showFacial, setShowFacial) => {
-  console.log("Entro");
+  let width = window.screen.width;
+  let height = window.screen.height * 0.78;
+
   if (!showFacial) {
-    console.log("NO ENTRO ACA");
+    console.log("Oculta unity y muestra AI");
     document.querySelector("#imagenUser").style.visibility = "visible";
+    document.querySelector("#imagenUser").style.height = height.toString()+'px';
+    document.querySelector("#imagenUser").style.width = width.toString()+'px';
     document.querySelector("#Unity").style.visibility = "hidden";
+    document.querySelector("#Unity").style.height = "0px";
+    document.querySelector("#Unity").style.width = "0px";
     setShowFacial(true);
   } else {
-    console.log("No entro aca");
+    console.log("Oculta AI y muestra Unity");
     document.querySelector("#imagenUser").style.visibility = "hidden";
+    document.querySelector("#imagenUser").style.height = "0px";
+    document.querySelector("#imagenUser").style.width = "0px";
     document.querySelector("#Unity").style.visibility = "visible";
+    document.querySelector("#Unity").style.height = height.toString()+'px';
+    document.querySelector("#Unity").style.width = width.toString()+'px';
     setShowFacial(false);
   }
 };
+export default function Visualizacion() {
+  const location = useLocation();
+  const [canShow, setCanShow] = useState(false);
+  const [showFacial, setShowFacial] = useState(false);
+
+  const handleOnOpen = () => {
+    console.log("Arranca por aca titanbnn");
+    setCanShow(true);
+  };
+  let width = window.screen.width;
+  let height = window.screen.height * 0.78;
+  let procesar = location.state[1];
+  let prenda = location.state[0];
+  setInterval(function () {
+    checkTime(setCanShow);
+    //Borrar si no funca
+  }, 1000);
+  return (
+    <div className="container-prediction-image">
+      <ResponsiveAppBar />
+      {!canShow ? (
+        <LoadingCard />
+      ) : (
+        //aca va la primera
+        <img
+          className="img-realidad-aumentada"
+          id="Unity"
+          src={"/unity_image"}
+          style={{ visibility: "visible", height: height, width: width }}
+        />
+      )}
+
+      <img
+        className="img-inteligencia-artificial"
+        src={
+          "/video_feed?prenda=" +
+          prenda._id +
+          "&tipo=" +
+          prenda.tipo +
+          "&marca=" +
+          prenda.marca.nombre +
+          "&procesar=" +
+          procesar
+        }
+        id="imagenUser"
+        style={{ visibility: "hidden", height: "0px", width: "0px" }}
+      />
+      <div className="buttons-container">
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            e.preventDefault();
+            turnOnFacialRecognition(showFacial, setShowFacial);
+          }}
+          style={{ display: "block", marginBottom: "5%" }}
+        >
+          {!showFacial ? ("Mostrar reconocimiento facial") : ("Ocultar reconocimiento facial")}
+        </Button>
+
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => {
+            procesar = 0;
+            stopThreads(prenda, 0);
+            window.history.go("-1");
+          }}
+          style={{ display: "block", marginBottom: "2%", float: "right" }}
+        >
+          Volver
+        </Button>
+      </div>
+    </div>
+  );
+}
