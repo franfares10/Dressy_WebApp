@@ -29,6 +29,8 @@ CENTRO = "630eba5d10522cae4a888755"
 procesarMain = 0
 global legalState
 legalState = False
+global genderState
+genderState = False
 
 
 def createRegistro(prenda,emocion,centro):
@@ -111,8 +113,8 @@ def modelPrediction(prenda,tipo,marca,procesar):
         cv2.destroyAllWindows() 
         print("DESTRUI TODO")
         print("Antes:", threading.enumerate())
-        threadPool.shutdown(wait=True) #Bajo el Pool de Threads incluso si quedó alguno corriendo.
-        threadPool.shutdown(cancel_futures=True)
+        #threadPool.shutdown(wait=True) #Bajo el Pool de Threads incluso si quedó alguno corriendo.
+        #threadPool.shutdown(cancel_futures=True)
         print("Dps:", threading.enumerate())
     else:
         cap.release() #Esta accediendo a algo que está definido en otro lugar, borrar y ver que pasa.
@@ -152,6 +154,10 @@ def set_terms_and_conditions():
     #Generar llamado que le pegue a este endpoint y verificar que no guarda la informacion.
     global legalState
     legalState = request.args.get('terms')
+    global genderState
+    genderState = request.args.get('gender')
+    print("{} {} ".format(legalState,genderState))
+    print(not legalState)
     return "ok"
 
 
