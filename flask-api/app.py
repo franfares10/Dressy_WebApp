@@ -21,8 +21,8 @@ from ImagenUnity import generate_frames,close_unity_socket
 app=Flask(__name__)
 #CORS(app)
 lock = threading.Lock()
-face_classifier = cv2.CascadeClassifier(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
-classifier = tf.keras.models.load_model(r'D:\\DressyFrontend\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
+face_classifier = cv2.CascadeClassifier(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\haarcascade_frontalface_default.xml')
+classifier = tf.keras.models.load_model(r'E:\\Escritorio\\Dressy_WebApp\\flask-api\\model\\model_v7.h5') #El que entrenamos nosotros en jupyter
 HISTORICO_URL = "https://dressy-reporting-service.herokuapp.com/api/emociones/historico/"
 emotion_labels = ['disgust', 'happy', 'neutral','sad','surprise']
 CENTRO = "630eba5d10522cae4a888755"
@@ -64,7 +64,7 @@ def modelPrediction(prenda,tipo,marca,procesar):
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = face_classifier.detectMultiScale(gray, minNeighbors=10)
 
-                threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
+                #threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
                 for (x, y, w, h) in faces:
                     # Dibuja el rectangulo formando los ejes de la cara.
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)

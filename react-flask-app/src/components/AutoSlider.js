@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Pagina1 from "../assets/Pagina6.png";
 import Pagina2 from "../assets/Pagina5.png";
 import Pagina3 from "../assets/Pagina4.png";
-import Shopping from "../assets/shoppingEdit.jpg";
 import "swiper/css/autoplay";
 import "./AutoSlider.css";
 import { Button, Paper } from "@mui/material";
