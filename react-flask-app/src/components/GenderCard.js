@@ -20,17 +20,27 @@ export default function GenderCard() {
 
   const [isCheckAccepted, setIsAccepted] = useState(false);
   const [isCheckNotAccepted, setIsNotAccepted] = useState(false);
+  const [otherGender, setOtherGender] = useState(false);
 
   const handleClickAccepted = () => {
     setIsAccepted(true);
     setIsNotAccepted(false);
+    setOtherGender(false)
+    saveToLocalStorage("hombre")
     
   };
   const handleClickNotAccepted = () => {
     setIsAccepted(false);
     setIsNotAccepted(true);
+    setOtherGender(false)
+    saveToLocalStorage("mujer")
   };
-
+  const handleClickNotAcceptedOtherGender = () => {
+    setIsAccepted(false);
+    setIsNotAccepted(false);
+    setOtherGender(true)
+    localStorage.removeItem("genero")
+  };
   return (
     <div style={{padding:'5px'}}>
         <Typography variant="h3">Elija su género</Typography>
@@ -62,6 +72,17 @@ export default function GenderCard() {
                 />
               }
               label="Mujer"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={otherGender}
+                  onClick={(e) => {
+                    handleClickNotAcceptedOtherGender();
+                  }}
+                />
+              }
+              label="Otro/Prefiero no decirlo"
             />
           </FormGroup>
         </CardActions>
