@@ -68,7 +68,7 @@
     position: absolute;
     width: 100%;
     right: 45%;
-    top: 75%;
+    top: 50%;
     transform: translate(-25%,-25%);
     transform: rotate(-90deg);   
 }

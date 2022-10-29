@@ -1,6 +1,10 @@
 .container-prediction-image{
-    width: fit-content;
-    max-height: fit-content;
+    background-color: whitesmoke;
+    height:100%;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+  
 }
 
 .container-prediction-image img{
@@ -9,11 +13,13 @@
 }
 
 .img-realidad-aumentada{
-
+    min-width: auto;
+    min-height: auto;
 }
 
 .img-inteligencia-artificial{
- 
+    min-width: auto;
+    min-height: auto;
 }
 
 .buttons-container{
@@ -21,4 +27,11 @@
     margin-top: -10%;
     margin-right: 3%;
 }
+
+.loader-container{
+    text-align: center;
+    margin-top: 15%
+
+}
+
 
