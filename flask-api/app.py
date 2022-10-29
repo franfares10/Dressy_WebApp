@@ -62,7 +62,7 @@ def modelPrediction(prenda,tipo,marca,procesar):
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = face_classifier.detectMultiScale(gray, minNeighbors=10)
 
-                threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
+                #threadPool.submit(send_and_process_body_captured_data,frame,faces,prenda)
                 for (x, y, w, h) in faces:
                     # Dibuja el rectangulo formando los ejes de la cara.
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
