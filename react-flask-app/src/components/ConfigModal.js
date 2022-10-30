@@ -19,6 +19,7 @@ const stepperOptions = ["Términos y condiciones", "Elegir género"];
 export default function ConfigModal() {
   const [openModal, setOpenModal] = useState(false);
   const [countStep, setCountStep] = useState(0);
+  const [buttonState,setButtonState] = useState(true)
 
   const handlePlusStep = async () => {
     setCountStep((prevCountStep) => prevCountStep + 1);
@@ -82,11 +83,12 @@ export default function ConfigModal() {
               <Step key={stepperOptions[0]}>
                 <StepLabel>{stepperOptions[0]}</StepLabel>
                 <StepContent>
-                  <LegalTerms />
+                  <LegalTerms setButtonState={setButtonState}/>
                   <Button
                     style={{ float: "right", marginRight: "5px" }}
                     variant="contained"
                     color="primary"
+                    disabled={buttonState}
                     onClick={(e) => {
                       e.preventDefault();
                       handlePlusStep();
@@ -113,7 +115,7 @@ export default function ConfigModal() {
                       variant="contained"
                       color="error"
                       style={{ marginRight: "15px" }}
-                      onClick={handleMinusStep}
+                      onClick={()=>{handleMinusStep();setButtonState(true)}}
                     >
                       Volver
                     </Button>

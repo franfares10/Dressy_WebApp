@@ -13,7 +13,7 @@ import { legalTerms } from "../assets/properties";
 import TermsAndConditions from "../assets/tyc.png"
 import { useState } from "react";
 
-export default function LegalTerms() {
+export default function LegalTerms({setButtonState}) {
   const [isCheckAccepted, setIsAccepted] = useState(false);
   const [isCheckNotAccepted, setIsNotAccepted] = useState(false);
 
@@ -21,12 +21,14 @@ export default function LegalTerms() {
     localStorage.setItem("terminos","True");
     setIsAccepted(true);
     setIsNotAccepted(false);
+    setButtonState(false)
     
   };
   const handleClickNotAccepted = () => {
     localStorage.setItem("terminos","False");
     setIsAccepted(false);
     setIsNotAccepted(true);
+    setButtonState(false)
   };
 
   return (
