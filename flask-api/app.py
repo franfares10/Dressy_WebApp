@@ -32,14 +32,15 @@ procesarMain = 0
 global legalState
 legalState = False
 global genderState
-genderState = False
+genderState = "genero"
 
 
-def createRegistro(prenda,emocion,centro):
+def createRegistro(prenda,emocion,centro,genero):
     payload = json.dumps({
                         "prenda": prenda,
                         "emocion": emocion,
-                        "centro": centro
+                        "centro": centro,
+                        "genero":genero
                         })
     headers =  {
                 'Content-Type': 'application/json'
@@ -91,12 +92,13 @@ def modelPrediction(prenda,tipo,marca,procesar):
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                         if( currentEmotion!="" and label!=currentEmotion and label!="neutral"):
                             global legalState #Terminar esto
-                            if(legalState==False):
+                            global genderState
+                            if(legalState=="False"):
                                 print("No acepto TyC, no podemos guardar informacion")
                             else:
                                 print("CAMBIE DE EMOCION")
-                                #thread =threading.Thread(target=createRegistro,args=(prenda,label,CENTRO))
-                                #thread.start()
+                                thread = threading.Thread(target=createRegistro,args=(prenda,label,CENTRO,genderState))
+                                thread.start()
                                 #threadPool.submit(generate_reporting_data,PRENDA, EMOCION, CENTRO)
                             currentEmotion = label
                         else:
@@ -158,8 +160,7 @@ def set_terms_and_conditions():
     legalState = request.args.get('terms')
     global genderState
     genderState = request.args.get('gender')
-    print("{} {} ".format(legalState,genderState))
-    print(not legalState)
+    print("Estado legal: {}, genero:{} ".format(legalState,genderState))
     return "ok"
 
 
