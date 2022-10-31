@@ -11,6 +11,7 @@ senderSocket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFFER_SIZE)
 
 
 def createSingletonInstance():
+    '''Metodo que actua como singleton, entre comillas, para no crear más de 1 vez el socket que escuche la respuesta de Unity.'''
     global socketCounter
     if (socketCounter == 0):
         #Creo que el socket porque no se creo
@@ -22,6 +23,7 @@ def createSingletonInstance():
         print("No creamos la conexion porque ya esta creada")
 
 def generate_frames():
+    '''Método que escucha el puerto al cual Unity le envia la captura de la camara, para poder renderizarlo en el frontend.'''
     createSingletonInstance()
     while True:
             msg, clien_addr = senderSocket.recvfrom(BUFFER_SIZE)

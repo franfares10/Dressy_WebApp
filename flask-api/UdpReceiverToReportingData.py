@@ -1,4 +1,3 @@
-# Creamos cola asincrona para procesar los request hacia la api de reporting, por interrupciones en el normal funcionamiento de la webApp.
 import json
 import socket
 import threading
@@ -15,6 +14,10 @@ server_reporting_socket.bind(reporting_socket_adress)
 
 
 class sender_reporting_data_thread(Thread):
+    '''Clase que tenía como proposito servir de generadora de Threads,
+    con los datos para enviar a reporting. Además, de contar la cantidad
+    de request por uso de aplicación.
+    La misma se deprecó por encontrar una solución más óptima'''
 
     def __init__(self, payload):
         Thread.__init__(self)
@@ -34,6 +37,8 @@ class sender_reporting_data_thread(Thread):
 
 lista_request = 0
 lista_reprocesos = []
+#Proceso que escuchaba el puerto 8085, el mismo corría stand-alone. Y por cada llamado recibido,
+#instanciaba una clase que permitía enviar un post al servicio de reporting.
 while True:
     mensajeUdp, infoSocket = server_reporting_socket.recvfrom(BUFFER_SIZE)
     if lista_request == 0:

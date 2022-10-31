@@ -10,11 +10,10 @@ class ThreadUdpUnity(Thread):
         self.imageUnity = imageUnity
         self.facesCoordinates = facesCoordinates
 
-    # El start de esta clase, llama internamente al run.
     def run(self):
         send_and_process_body_captured_data(self.imageUnity, self.facesCoordinates)
 
-class ThreadReportingData(Thread): ##Quedo deprecado, revisar si quedó por algun lado pero no deberia
+class ThreadReportingData(Thread): ##Quedo deprecado
     def __init__(self, prenda, centro, emocion):
         Thread.__init__(self)
         self.prenda = prenda
