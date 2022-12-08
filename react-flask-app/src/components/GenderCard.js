@@ -43,7 +43,7 @@ export default function GenderCard() {
   };
   return (
     <div style={{padding:'5px'}}>
-        <Typography variant="h3">Elija su género</Typography>
+        <Typography variant="h3">¿Con qué género se identifica?</Typography>
         <Typography variant="body2">
           Clickee el género con el que se identifique, en caso de que no desee hacerlo, o no se sienta identificado con ninguna opción, pulse
           continuar. En caso de no haber elegido, no se aplicará el filtro por
