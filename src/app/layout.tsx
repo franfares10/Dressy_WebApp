@@ -42,7 +42,7 @@ export default function RootLayout({
                 <Image src={logo} alt='logo' />
               </Link>
             </header>
-            <div className='mx-auto mt-20'>{children}</div>
+            <div className='mx-auto mt-28 w-full'>{children}</div>
           </div>
         </ThemeProvider>
       </body>
