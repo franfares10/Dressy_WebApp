@@ -19,7 +19,7 @@ export function ClothesCarousel() {
       opts={{
         align: "center",
       }}
-      className="w-full max-w-sm mx-auto md:max-w-2xl lg:max-w-4xl xl:max-w-6xl"
+      className="w-full max-w-sm mx-auto md:max-w-2xl lg:max-w-4xl"
     >
       <CarouselContent>
         {Array.from({ length: 10 }).map((_, index) => (
