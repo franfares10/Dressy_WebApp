@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <div className='relative h-full w-full bg-slate-950 bg-repeat'>
             <div className='absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]'></div>
-            <div className='absolute bottom-0 right-[-20%] top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]'></div>
+            <div className='absolute bottom-0 right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]'></div>
           </div>
           <div className='flex flex-col'>
             <header className='fixed backdrop-blur-md z-50 w-full flex items-center justify-center h-[80px] shadow-black/10 shadow-md'>
@@ -42,7 +42,7 @@ export default function RootLayout({
                 <Image src={logo} alt='logo' />
               </Link>
             </header>
-            <div className='mx-auto mt-28 w-full'>{children}</div>
+            <div className='mx-auto mt-48 w-full'>{children}</div>
           </div>
         </ThemeProvider>
       </body>
